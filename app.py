@@ -1,17 +1,27 @@
 from flask import Flask, render_template, send_file
+from config import Config
+from models import db
 from routes.products import products_bp
 from routes.customers import customers_bp
 from routes.suppliers import suppliers_bp
 from routes.sales import sales_bp
 from routes.dashboard import dashboard_bp
+from flask_migrate import Migrate
 from utils.export import export_sales
 import os
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
+    app.config.from_object(Config)
 
     # Ensure instance folder exists
     os.makedirs(app.instance_path, exist_ok=True)
+
+    # Initialize database
+    db.init_app(app)
+
+    # Initialize Flask-Migrate
+    migrate = Migrate(app, db)
 
     # Register blueprints
     app.register_blueprint(products_bp, url_prefix="/products")
@@ -35,3 +45,5 @@ def create_app():
 if __name__ == "__main__":
     app = create_app()
     app.run(debug=True)
+
+    

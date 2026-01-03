@@ -4,7 +4,6 @@ Flask-Migrate==4.0.5
 Flask-Login==0.6.3
 python-dotenv==1.0.1
 SQLAlchemy==2.0.45
-alembic==1.13.2
+alembic==1.17.2
 gunicorn
 qrcode[pil]
-psycopg2-binary
