@@ -1,50 +1,52 @@
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from flask_login import UserMixin
 
-db = SQLAlchemy()
+# Simple in-memory storage (replace with CSV/JSON if you want persistence)
+suppliers = []
+products = []
+customers = []
+sales = []
+users = []
 
-class Supplier(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(128), nullable=False)
-    contact_email = db.Column(db.String(128))
-    phone = db.Column(db.String(64))
-    address = db.Column(db.String(256))
-    products = db.relationship("Product", backref="supplier", lazy=True)
+class Supplier:
+    def __init__(self, id, name, contact_email=None, phone=None, address=None):
+        self.id = id
+        self.name = name
+        self.contact_email = contact_email
+        self.phone = phone
+        self.address = address
+        self.products = []
 
-class Product(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(128), nullable=False)
-    sku = db.Column(db.String(64), unique=True, nullable=False)
-    price = db.Column(db.Float, nullable=False)
-    stock = db.Column(db.Integer, default=0)
-    supplier_id = db.Column(db.Integer, db.ForeignKey("supplier.id"))
+class Product:
+    def __init__(self, id, name, sku, price, stock=0, supplier=None):
+        self.id = id
+        self.name = name
+        self.sku = sku
+        self.price = price
+        self.stock = stock
+        self.supplier = supplier
 
-class Customer(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(128), nullable=False)
-    email = db.Column(db.String(128))
-    phone = db.Column(db.String(64))
-    address = db.Column(db.String(256))
+class Customer:
+    def __init__(self, id, name, email=None, phone=None, address=None):
+        self.id = id
+        self.name = name
+        self.email = email
+        self.phone = phone
+        self.address = address
 
-class Sale(db.Model):
-    __tablename__ = "sale"
-    id = db.Column(db.Integer, primary_key=True)
-    sale_code = db.Column(db.String(50), unique=True, nullable=False)
-    product_id = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=False)
-    customer_id = db.Column(db.Integer, db.ForeignKey("customer.id"), nullable=False)
-    quantity = db.Column(db.Integer, nullable=False)
-    total = db.Column(db.Float, nullable=False)   # grand total incl. GST
-    gst = db.Column(db.Float, nullable=False, default=0.0)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+class Sale:
+    def __init__(self, id, sale_code, product, customer, quantity, total, gst=0.0):
+        self.id = id
+        self.sale_code = sale_code
+        self.product = product
+        self.customer = customer
+        self.quantity = quantity
+        self.total = total
+        self.gst = gst
+        self.created_at = datetime.utcnow()
 
-    product = db.relationship("Product", backref="sales")
-    customer = db.relationship("Customer", backref="sales")
-
-
-
-class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), unique=True, nullable=False)
-    password = db.Column(db.String(128), nullable=False)
-    role = db.Column(db.String(20), default="admin")  # admin/staff
+class User:
+    def __init__(self, id, username, password, role="admin"):
+        self.id = id
+        self.username = username
+        self.password = password
+        self.role = role
