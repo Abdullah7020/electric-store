@@ -56,7 +56,9 @@ def create_sale():
         db.session.commit()
 
         # ✅ Generate QR code for this sale
-        qr_data = f"https://yourstore.com/receipt/{sale.id}"  # adjust URL as needed
+
+
+        qr_data = url_for("sales.receipt", id=sale.id, _external=True)
         qr_img = qrcode.make(qr_data)
         qr_path = os.path.join(current_app.root_path, "static", f"qr_{sale.id}.png")
         qr_img.save(qr_path)
