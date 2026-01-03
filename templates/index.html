@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="grid">
+  <a class="card" href="{{ url_for('products.list_products') }}">
+    <h3>Products</h3><p>Manage inventory, prices, and stock.</p>
+  </a>
+  <a class="card" href="{{ url_for('customers.list_customers') }}">
+    <h3>Customers</h3><p>Keep customer records up-to-date.</p>
+  </a>
+  <a class="card" href="{{ url_for('suppliers.list_suppliers') }}">
+    <h3>Suppliers</h3><p>Track supplier details and links.</p>
+  </a>
+  <a class="card" href="{{ url_for('sales.list_sales') }}">
+    <h3>Sales</h3><p>Record and review sales activity.</p>
+  </a>
+</section>
+{% endblock %}

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Receipt</title>
+  <style>
+    @page { size: 58mm auto; margin: 3mm; }
+    body {
+      font-family: monospace;
+      font-size: 12px;
+      margin: 0;
+      padding: 0;
+      background: #fff;
+    }
+    .receipt {
+      width: 58mm;
+      margin: 0 auto;
+      padding: 5px;
+      border: 1px dashed #000;
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 5px;
+    }
+    .logo img {
+      max-width: 40mm;
+      height: auto;
+    }
+    .ascii-logo {
+      text-align: center;
+      font-weight: bold;
+      font-size: 12px;
+      line-height: 1.2;
+      margin-bottom: 5px;
+    }
+    .header {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 5px;
+      line-height: 1.2;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    td {
+      padding: 2px 0;
+      vertical-align: top;
+    }
+    .sep {
+      border-top: 1px dashed #000;
+      margin: 5px 0;
+    }
+    .totals td {
+      font-weight: bold;
+      padding-top: 4px;
+    }
+    .qr {
+      text-align: center;
+      margin-top: 8px;
+    }
+    .qr img {
+      max-width: 30mm;
+      height: auto;
+    }
+    @media print {
+      .actions { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="receipt">
+    <!-- ✅ Logo section -->
+    <div class="logo">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="Store Logo" onerror="this.style.display='none'">
+    </div>
+
+    <!-- ✅ ASCII fallback logo -->
+    <div class="ascii-logo">
+      ***************<br>
+      * ELECTRIC STORE *<br>
+      ***************
+    </div>
+
+    <div class="header">
+      Official Receipt
+    </div>
+
+    <table>
+      <tr><td>Sale Code:</td><td>{{ sale.sale_code }}</td></tr>
+      <tr><td>Date:</td><td>{{ sale.created_at.strftime("%Y-%m-%d %H:%M") }}</td></tr>
+      <tr><td>Customer:</td><td>{{ sale.customer.name }}</td></tr>
+      <tr><td>Product:</td><td>{{ sale.product.name }}</td></tr>
+      <tr><td>Qty:</td><td>{{ sale.quantity }}</td></tr>
+      <tr><td>Price:</td><td>{{ "%.2f"|format(sale.product.price) }}</td></tr>
+    </table>
+
+    <div class="sep"></div>
+
+    <table>
+      <tr><td>Subtotal:</td><td>{{ "%.2f"|format(sale.total - sale.gst) }}</td></tr>
+      <tr><td>GST (18%):</td><td>{{ "%.2f"|format(sale.gst) }}</td></tr>
+      <tr class="totals"><td>Total:</td><td>{{ "%.2f"|format(sale.total) }}</td></tr>
+    </table>
+
+    <div class="sep"></div>
+
+    <div style="text-align:center; font-size:11px;">
+      Thank you for shopping!<br>
+      © Electric Store
+    </div>
+
+    <!-- ✅ QR Code section -->
+    <div class="qr">
+      <img src="{{ url_for('static', filename='qr_' ~ sale.id ~ '.png') }}" alt="QR Code">
+      <div style="font-size:10px;">Scan for details</div>
+    </div>
+  </div>
+
+  <script>
+    // 🔥 Auto-print on page load
+    window.onload = function() {
+      window.print();
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="toolbar">
+  <a class="btn" href="{{ url_for('suppliers.create_supplier') }}">+ Add supplier</a>
+</div>
+
+<table class="table">
+  <thead>
+    <tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Address</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+    {% for s in suppliers %}
+    <tr>
+      <td>{{ s.id }}</td>
+      <td>{{ s.name }}</td>
+      <td>{{ s.contact_email }}</td>
+      <td>{{ s.phone }}</td>
+      <td>{{ s.address }}</td>
+      <td class="actions">
+        <a class="link" href="{{ url_for('suppliers.edit_supplier', id=s.id) }}">Edit</a>
+        <form method="post" action="{{ url_for('suppliers.delete_supplier', id=s.id) }}" class="inline">
+          <button class="link danger" type="submit">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

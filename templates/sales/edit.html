@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Edit sale</h2>
+<form method="post" class="form">
+  <label>Product
+    <select name="product_id" required>
+      {% for p in products %}
+      <option value="{{ p.id }}" {% if sale.product_id==p.id %}selected{% endif %}>{{ p.name }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Customer
+    <select name="customer_id" required>
+      {% for c in customers %}
+      <option value="{{ c.id }}" {% if sale.customer_id==c.id %}selected{% endif %}>{{ c.name }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Quantity<input name="quantity" type="number" min="1" value="{{ sale.quantity }}" required /></label>
+  <button class="btn" type="submit">Update</button>
+</form>
+{% endblock %}

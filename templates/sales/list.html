@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="toolbar">
+  <a class="btn" href="{{ url_for('sales.create_sale') }}">+ Record sale</a>
+<a class="btn" href="{{ url_for('sales.export_sales') }}">⬇ Export CSV</a>
+
+</div>
+
+<table class="table">
+  <thead>
+    <tr><th>ID</th><th>Product</th><th>Customer</th><th>Quantity</th><th>Total</th><th>Date</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+    {% for s in sales %}
+    <tr>
+      <td>{{ s.id }}</td>
+      <td>{{ s.product.name }}</td>
+      <td>{{ s.customer.name }}</td>
+      <td>{{ s.quantity }}</td>
+      <td>{{ "%.2f"|format(s.total) }}</td>
+      <td>{{ s.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+      <td class="actions">
+        <a class="link" href="{{ url_for('sales.edit_sale', id=s.id) }}">Edit</a>
+        <form method="post" action="{{ url_for('sales.delete_sale', id=s.id) }}" class="inline">
+          <button class="link danger" type="submit">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

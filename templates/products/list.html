@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="toolbar">
+  
+  <a class="btn" href="{{ url_for('products.create_product') }}">+ Add product</a>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th><th>Name</th><th>SKU</th><th>Price</th><th>Stock</th><th>Supplier</th><th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in products %}
+    <tr>
+      <td>{{ p.id }}</td>
+      <td>{{ p.name }}</td>
+      <td>{{ p.sku }}</td>
+      <td>{{ "%.2f"|format(p.price) }}</td>
+      <td>{{ p.stock }}</td>
+      <td>{{ suppliers.get(p.supplier_id, "—") }}</td>
+      <td class="actions">
+        <a class="link" href="{{ url_for('products.edit_product', id=p.id) }}">Edit</a>
+        <form method="post" action="{{ url_for('products.delete_product', id=p.id) }}" class="inline">
+          <button class="link danger" type="submit">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
